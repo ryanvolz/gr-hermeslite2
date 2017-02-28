@@ -56,7 +56,7 @@ HermesProxy::HermesProxy(int RxFreq0, int RxFreq1, int TxFreq, bool RxPre,
 			 unsigned char TxDr, int RxSmp, const char* Intfc, 
 			 const char * ClkS, int AlexRA, int AlexTA,
 			 int AlexHPF, int AlexLPF, int Verb, int NumRx,
-			 const char* MACAddr)	// constructor
+			 const char* MACAddr, int RxAtt)	// constructor
 {
 
 
@@ -112,7 +112,7 @@ HermesProxy::HermesProxy(int RxFreq0, int RxFreq1, int TxFreq, bool RxPre,
 
 	ADCdither = false;
 	ADCrandom = false;
-	RxAtten = 0;		// Hermes V2.0
+	RxAtten = RxAtt;		// Hermes V2.0
 	Duplex = true;		// Allows TxF to program separately from RxF
 
 	TxStop = false;

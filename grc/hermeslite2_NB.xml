@@ -69,20 +69,20 @@
   <param>
     <name>Rx Preamp Off/On</name>
     <key>RxPre</key>
-    <value>0</value>
-    <type>int</type>
+    <value>False</value>
+    <type>bool</type>
   </param>
   <param>
     <name>PTT On Mutes Rx</name>
     <key>PTTRx</key>
-    <value>1</value>
-    <type>int</type>
+    <value>True</value>
+    <type>bool</type>
   </param>
   <param>
     <name>PTT Off Mutes Tx</name>
     <key>PTTTx</key>
-    <value>1</value>
-    <type>int</type>
+    <value>True</value>
+    <type>bool</type>
   </param>
   <param>
     <name>Tx PTT mode Off/Vox/On</name>
