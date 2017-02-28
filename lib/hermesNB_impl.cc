@@ -37,7 +37,7 @@ HermesProxy* Hermes;	// make it visible to metis.cc
 
 
 namespace gr {
-  namespace hpsdr {
+  namespace hermeslite2 {
 
     hermesNB::sptr
     hermesNB::make(int RxFreq0, int RxFreq1, int TxFreq, bool RxPre,
@@ -256,6 +256,6 @@ int hermesNB_impl::general_work (int noutput_items,
 
     }	// general_work
 
-  } /* namespace hpsdr */
+  } /* namespace hermeslite2 */
 } /* namespace gr */
 

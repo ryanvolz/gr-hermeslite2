@@ -1,5 +1,5 @@
 
-gr-hpsdr
+gr-hermeslite2
 ========
 
 Copyright 2012-2015  Thomas C. McDermott, N5EG

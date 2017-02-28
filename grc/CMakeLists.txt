@@ -17,7 +17,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 install(FILES
-    hpsdr_hermesNB.xml
-    hpsdr_hermesWB.xml
+    hermeslite2_NB.xml
+    hermeslite2_WB.xml
     DESTINATION share/gnuradio/grc/blocks
 )

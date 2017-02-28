@@ -18,13 +18,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_HPSDR_HERMESNB_IMPL_H
-#define INCLUDED_HPSDR_HERMESNB_IMPL_H
+#ifndef INCLUDED_HERMESLITE2_HERMESNB_IMPL_H
+#define INCLUDED_HERMESLITE2_HERMESNB_IMPL_H
 
-#include <hpsdr/hermesNB.h>
+#include <hermeslite2/hermesNB.h>
 
 namespace gr {
-  namespace hpsdr {
+  namespace hermeslite2 {
 
     class hermesNB_impl : public hermesNB
     {
@@ -72,8 +72,8 @@ namespace gr {
 		       gr_vector_void_star &output_items);
     };
 
-  } // namespace hpsdr
+  } // namespace hermeslite2
 } // namespace gr
 
-#endif /* INCLUDED_HPSDR_HERMESNB_IMPL_H */
+#endif /* INCLUDED_HERMESLITE2_HERMESNB_IMPL_H */
 

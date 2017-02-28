@@ -19,21 +19,21 @@
  */
 
 
-#ifndef INCLUDED_HPSDR_HERMESWB_H
-#define INCLUDED_HPSDR_HERMESWB_H
+#ifndef INCLUDED_HERMESLITE2_HERMESWB_H
+#define INCLUDED_HERMESLITE2_HERMESWB_H
 
-#include <hpsdr/api.h>
+#include <hermeslite2/api.h>
 #include <gnuradio/block.h>
 
 namespace gr {
-  namespace hpsdr {
+  namespace hermeslite2 {
 
     /*!
      * \brief <+description of block+>
      * \ingroup hpsdr
      *
      */
-    class HPSDR_API hermesWB : virtual public gr::block
+    class HERMESLITE2_API hermesWB : virtual public gr::block
     {
      public:
       typedef boost::shared_ptr<hermesWB> sptr;
@@ -65,5 +65,5 @@ namespace gr {
   } // namespace hpsdr
 } // namespace gr
 
-#endif /* INCLUDED_HPSDR_HERMESWB_H */
+#endif /* INCLUDED_HERMESLITE2_HERMESWB_H */
 

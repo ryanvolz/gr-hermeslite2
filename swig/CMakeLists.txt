@@ -35,23 +35,23 @@ foreach(incdir ${GNURADIO_RUNTIME_INCLUDE_DIRS})
     list(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/gnuradio/swig)
 endforeach(incdir)
 
-set(GR_SWIG_LIBRARIES gnuradio-hpsdr)
-set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/hpsdr_swig_doc.i)
+set(GR_SWIG_LIBRARIES gnuradio-hermeslite2)
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/hermeslite2_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
-GR_SWIG_MAKE(hpsdr_swig hpsdr_swig.i)
+GR_SWIG_MAKE(hermeslite2_swig hermeslite2_swig.i)
 
 ########################################################################
 # Install the build swig module
 ########################################################################
-GR_SWIG_INSTALL(TARGETS hpsdr_swig DESTINATION ${GR_PYTHON_DIR}/hpsdr)
+GR_SWIG_INSTALL(TARGETS hermeslite2_swig DESTINATION ${GR_PYTHON_DIR}/hermeslite2)
 
 ########################################################################
 # Install swig .i files for development
 ########################################################################
 install(
     FILES
-    hpsdr_swig.i
-    ${CMAKE_CURRENT_BINARY_DIR}/hpsdr_swig_doc.i
-    DESTINATION ${GR_INCLUDE_DIR}/hpsdr/swig
+    hermeslite2_swig.i
+    ${CMAKE_CURRENT_BINARY_DIR}/hermeslite2_swig_doc.i
+    DESTINATION ${GR_INCLUDE_DIR}/hermeslite2/swig
 )

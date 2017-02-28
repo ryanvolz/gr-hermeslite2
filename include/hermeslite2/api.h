@@ -19,15 +19,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_HPSDR_API_H
-#define INCLUDED_HPSDR_API_H
+#ifndef INCLUDED_HERMESLITE2_API_H
+#define INCLUDED_HERMESLITE2_API_H
 
 #include <gnuradio/attributes.h>
 
-#ifdef gnuradio_hpsdr_EXPORTS
-#  define HPSDR_API __GR_ATTR_EXPORT
+#ifdef gnuradio_hermeslite2_EXPORTS
+#  define HERMESLITE2_API __GR_ATTR_EXPORT
 #else
-#  define HPSDR_API __GR_ATTR_IMPORT
+#  define HERMESLITE2_API __GR_ATTR_IMPORT
 #endif
 
-#endif /* INCLUDED_HPSDR_API_H */
+#endif /* INCLUDED_HERMESLITE2_API_H */

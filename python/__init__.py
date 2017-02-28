@@ -19,7 +19,7 @@
 # The presence of this file turns this directory into a Python package
 
 '''
-This is the GNU Radio HPSDR module. Place your Python package
+This is the GNU Radio Hermes Lite 2 module. Place your Python package
 description here (python/__init__.py).
 '''
 
@@ -41,8 +41,8 @@ if _RTLD_GLOBAL != 0:
 # ----------------------------------------------------------------
 
 
-# import swig generated symbols into the hpsdr namespace
-from hpsdr_swig import *
+# import swig generated symbols into the hermeslite2 namespace
+from hermeslite2_swig import *
 
 # import any pure python here
 

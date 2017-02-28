@@ -23,5 +23,5 @@
 install(FILES
     api.h
     hermesNB.h
-    hermesWB.h DESTINATION include/hpsdr
+    hermesWB.h DESTINATION include/hermeslite2
 )

@@ -37,7 +37,7 @@
 HermesProxyW* HermesW;	// make it visible to metis.cc
 
 namespace gr {
-  namespace hpsdr {
+  namespace hermeslite2 {
 
     hermesWB::sptr
     hermesWB::make(bool RxPre, const char* Intfc, const char * ClkS,
@@ -170,6 +170,6 @@ int hermesWB_impl::general_work (int noutput_items,
 
     }	// general_work
 
-  } /* namespace hpsdr */
+  } /* namespace hermeslite2 */
 } /* namespace gr */
 
