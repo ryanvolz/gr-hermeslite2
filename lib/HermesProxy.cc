@@ -56,7 +56,7 @@ HermesProxy::HermesProxy(int RxFreq0, int RxFreq1, int TxFreq, bool RxPre,
 			 unsigned char TxDr, int RxSmp, const char* Intfc, 
 			 const char * ClkS, int AlexRA, int AlexTA,
 			 int AlexHPF, int AlexLPF, int Verb, int NumRx,
-			 const char* MACAddr, int RxAtt)	// constructor
+			 const char* MACAddr, int RxAtt, bool Dither, bool Random)	// constructor
 {
 
 
@@ -110,8 +110,8 @@ HermesProxy::HermesProxy(int RxFreq0, int RxFreq1, int TxFreq, bool RxPre,
 	PTTOffMutesTx = PTTTxMute;   // PTT Off mutes the transmitter
 	PTTOnMutesRx = PTTRxMute;	// PTT On mutes receiver
 
-	ADCdither = false;
-	ADCrandom = false;
+	ADCdither = Dither;
+	ADCrandom = Random;
 	RxAtten = RxAtt;		// Hermes V2.0
 	Duplex = true;		// Allows TxF to program separately from RxF
 

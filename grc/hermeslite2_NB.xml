@@ -5,7 +5,7 @@
   <category>[Hermes Lite 2]</category>
   <flags>throttle</flags>
   <import>import hermeslite2</import>
-  <make>hermeslite2.hermesNB($Rx0F, $Rx1F, $TxF, $RxPre, $PTTmode, $PTTTx, $PTTRx, $TxDrive, $RxSmp, $Intfc, $CkS, $AlexRA, $AlexTA, $AlexHPF, $AlexLPF, $Verbose, $num_outputs,$MACAddr)</make>
+  <make>hermeslite2.hermesNB($Rx0F, $Rx1F, $TxF, $RxPre, $PTTmode, $PTTTx, $PTTRx, $TxDrive, $RxSmp, $Intfc, $CkS, $AlexRA, $AlexTA, $AlexHPF, $AlexLPF, $Verbose, $num_outputs,$MACAddr,$RXAtt,$Dither,$Random)</make>
   <callback>set_Receive0Frequency($Rx0F)</callback>
   <callback>set_Receive1Frequency($Rx1F)</callback>
   <callback>set_RxSampRate($RxSmp)</callback>
@@ -250,6 +250,26 @@
     <value>"*"</value>
     <type>string</type>
   </param>
+   <param>
+    <name>RX Attenuation</name>
+    <key>RXAtt</key>
+    <value>0</value>
+    <type>int</type>
+   </param>
+  <param>
+    <name>Dither</name>
+    <key>Dither</key>
+    <value>True</value>
+    <type>bool</type>
+  </param>
+  <param>
+    <name>Random</name>
+    <key>Random</key>
+    <value>False</value>
+    <type>bool</type>
+  </param>
+
+
 
 <check>$num_outputs >= 1</check> 
 <check>2 >= $num_outputs</check>   

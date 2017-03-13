@@ -53,6 +53,7 @@ namespace gr {
  * \param Verbose  Turns Verbose mode on (=1) or off (=0)
  * \param NumRx  Number of Receivers (1 or 2)
  * \param MACAddr MAC Address of target or * for first detected
+ * \param RxAtt RX Attenuation
  *
  */
       hermesNB_impl(int RxFreq0, int RxFreq1, int TxFreq, bool RxPre,
@@ -60,7 +61,7 @@ namespace gr {
 			 unsigned char TxDr, int RxSmp, const char* Intfc, 
 			 const char * ClkS, int AlexRA, int AlexTA,
 			 int AlexHPF, int AlexLPF, int Verbose, int NumRx,
-			 const char* MACAddr);
+		         const char* MACAddr, int RXAtt, bool Dither, bool Random);
       ~hermesNB_impl();
 
       // Where all the action really happens

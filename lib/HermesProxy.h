@@ -132,7 +132,7 @@ public:
 			 unsigned char TxDr, int RxSmp, const char* Intfc, 
 			 const char * ClkS, int AlexRA, int AlexTA,
 			 int AlexHPF, int AlexRPF, int Verbose, int NumRx,
-			 const char* MACAddr);	// constructor
+		         const char* MACAddr, int RXAtt, bool Dither, bool Random); // constructor
 
 	~HermesProxy();			// destructor
 
