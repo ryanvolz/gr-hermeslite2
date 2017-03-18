@@ -137,6 +137,9 @@ HermesProxy::HermesProxy(int RxFreq0, int RxFreq1, int TxFreq, bool RxPre,
 	
 	TxHoldOff = 0;		// initialize transmit hold off counter
 
+	// RX semaphore
+	sem_init(&rx_sem, 0, 0);
+
 	// allocate the receiver buffers
 	for(int i=0; i<NUMRXIQBUFS; i++)
 		RxIQBuf[i] = new float[RXBUFSIZE];
@@ -480,6 +483,7 @@ IQBuf_t HermesProxy::GetNextRxBuf(IQBuf_t current_outbuf) // get new Rx buffer i
 		return NULL;
 	  }
 	  ++RxWriteCounter &= (NUMRXIQBUFS - 1); // get next writeable buffer
+	  sem_post(&rx_sem);
 	  RxWriteFill = 0;
 
 	  //pthread_mutex_unlock(&mutexRPG);
@@ -601,13 +605,14 @@ IQBuf_t HermesProxy::GetRxIQ()		// called by HermesNB to pickup any RxIQ
 	//  if(status != 0)
 	//    return NULL;		// return 'no buffers' if can't acquire the mutex
 
-	if(RxReadCounter == RxWriteCounter)
+	/*if(RxReadCounter == RxWriteCounter)
 	{
 	  //pthread_mutex_unlock(&mutexRPG);
 	  return NULL;				// empty - no buffers to return
 
-	}
+	  }*/
 
+        sem_wait(&rx_sem);
 	IQBuf_t ReturnBuffer = RxIQBuf[RxReadCounter];	// get the next receiver buffer
 	++RxReadCounter &= (NUMRXIQBUFS - 1);		// increment read counter modulo
 

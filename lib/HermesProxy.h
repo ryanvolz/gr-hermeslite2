@@ -32,6 +32,8 @@
 
 #include <gnuradio/io_signature.h>
 
+#include <semaphore.h>
+
 #ifndef HermesProxy_H
 #define HermesProxy_H
 
@@ -84,6 +86,8 @@ private:
 
 	//pthread_mutex_t mutexRPG;	// Rx to Proxy to Gnuradio buffer
 	//pthread_mutex_t mutexGPT;	// Gnuradio to Proxy to Tx buffer
+
+        sem_t rx_sem;                   // RX semaphore
 
 
 public:
