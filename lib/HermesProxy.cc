@@ -51,12 +51,12 @@
 #include <cstring>
 
 
-HermesProxy::HermesProxy(int RxFreq0, int RxFreq1, int TxFreq, bool RxPre,
+HermesProxy::HermesProxy(int RxFreq0, int RxFreq1, int TxFreq,
 			 int PTTModeSel, bool PTTTxMute, bool PTTRxMute,
 			 unsigned char TxDr, int RxSmp, const char* Intfc, 
-			 const char * ClkS, int AlexRA, int AlexTA,
-			 int AlexHPF, int AlexLPF, int Verb, int NumRx,
-			 const char* MACAddr, int RxAtt, bool Dither, bool Random)	// constructor
+			 int Verb, int NumRx,
+		         const char* MACAddr, bool AGC, int LNAG, bool PA, bool Q5) // constructor
+
 {
 
 
@@ -85,17 +85,6 @@ HermesProxy::HermesProxy(int RxFreq0, int RxFreq1, int TxFreq, bool RxPre,
 	strcpy(interface, Intfc);	// Ethernet interface to use (defaults to eth0)
 	NumReceivers = NumRx;
 
-	unsigned int cs;		// Convert ClockSource strings to unsigned, then intitalize
-	sscanf(ClkS, "%x", &cs);
-	ClockSource = (cs & 0xFC);
-
-//	Initialize the Alex control registers.
-
-	AlexRxAnt = AlexRA;		// Select Alex Receive Antenna or from T/R relay
-	AlexTxAnt = AlexTA;		// Select Alex Tx Antenna
-	AlexRxHPF = AlexHPF;		// Select Alex Receive High Pass Filter
-	AlexTxLPF = AlexLPF;		// Select Alex Transmit Low Pass Filter
-
 	Verbose = Verb;			// Turn Verbose mode on/off
 
         for (int i=0; i<18; i++)
@@ -106,14 +95,16 @@ HermesProxy::HermesProxy(int RxFreq0, int RxFreq1, int TxFreq, bool RxPre,
 	TransmitFrequency = (unsigned)TxFreq;		// initialize frequencies
 	TxDrive = TxDr;		// default to (almost) off
 	PTTMode = PTTModeSel;
-	RxPreamp = RxPre;
 	PTTOffMutesTx = PTTTxMute;   // PTT Off mutes the transmitter
 	PTTOnMutesRx = PTTRxMute;	// PTT On mutes receiver
 
-	ADCdither = Dither;
-	ADCrandom = Random;
-	RxAtten = RxAtt;		// Hermes V2.0
 	Duplex = true;		// Allows TxF to program separately from RxF
+
+	// HL2 parameters
+	HardwareAGC = AGC;
+	LNAGain = LNAG;
+	OnboardPA = PA;
+	Q5Switch = Q5;
 
 	TxStop = false;
 
@@ -775,7 +766,7 @@ void HermesProxy::BuildControlRegs(unsigned RegNum, RawBuf_t outbuf)
 	switch(RegNum)
 	{
 	  case 0:
-	    Speed = ClockSource;	// Set clock Source from user input
+	    Speed = 0x0;
 	    if(RxSampleRate == 384000)
 		Speed |= 0x03;
 	    if(RxSampleRate == 192000)
@@ -786,22 +777,23 @@ void HermesProxy::BuildControlRegs(unsigned RegNum, RawBuf_t outbuf)
 		Speed |= 0x00;
 
 	    RxCtrl = 0x00;
-	    if(RxPreamp)
-		RxCtrl |= 0x04;
-	    if(ADCdither)
-		RxCtrl |= 0x08;
-	    if(ADCrandom)
-		RxCtrl |= 0x10;
+	    // HL2 Hardware AGC
+	    if(HardwareAGC)
+	        RxCtrl |= 0x10;
+	    // HL2 LNA gain MSB
+	    RxCtrl |= ((51 - LNAGain) & 0x20) >> 2; // position 0x08
+	    // TODO HL2 VNA fixed gain
 
+	    Ctrl4 = 0x0;
 	    if(NumReceivers == 2)
 		Ctrl4 |= 0x08;
 	    if(Duplex)
 		Ctrl4 |= 0x04;
 
 	    outbuf[4] = Speed;				// C1
-	    outbuf[5] = 0x00;				// C2
-	    outbuf[6] = RxCtrl | AlexRxAnt;		// C3
-	    outbuf[7] = Ctrl4 | AlexTxAnt;		// C4 - #Rx, Duplex
+	    outbuf[5] = 0x00;				// C2 // TODO HL2 open collector outputs
+	    outbuf[6] = RxCtrl;		// C3
+	    outbuf[7] = Ctrl4;		// C4 - #Rx, Duplex
           break;
 
 	  case 2:					// Tx NCO freq (and Rx1 NCO for special case)
@@ -836,68 +828,36 @@ void HermesProxy::BuildControlRegs(unsigned RegNum, RawBuf_t outbuf)
 	    outbuf[7] = 0;				// c4 RxFreq LSB
 	  break;
 
-	  case 18:					// drive level & filt select (if Alex)
+	  case 18:					// drive level & HL2 PA
 	    if (PTTOffMutesTx & (PTTMode == PTTOff))
 		outbuf[4] = 0;				// (almost) kill Tx when PTTOff and PTTControlsTx
 	    else
 		outbuf[4] = TxDrive;			// c1
+	    // TODO HL2 VNA mode
+	    outbuf[5] = 0;
+	    if (OnboardPA)
+	      outbuf[5] |= 0x08;
+	    if (Q5Switch)
+	      outbuf[5] |= 0x04;
 
-
-	    unsigned char RxHPF, TxLPF;
-
-	    RxHPF = AlexRxHPF;
-	    if (AlexRxHPF == 0)				// if Rx autotrack
-	    {
-		if (Receive0Frequency < 1500000)
-		  RxHPF = 0x20;				// bypass
-		else if (Receive0Frequency < 6500000)
-	          RxHPF = 0x10;				// 1.5 MHz HPF
-		else if (Receive0Frequency < 9500000)
-		  RxHPF = 0x08;				// 6.5 MHz HPF
-		else if (Receive0Frequency < 13000000)
-		  RxHPF = 0x04;				// 9.5 mHz HPF
-		else if (Receive0Frequency < 20000000)
-		  RxHPF = 0x01;				// 13 Mhz HPF
-		else if (Receive0Frequency < 50000000)
-		  RxHPF = 0x02;				// 20 MHz HPF
-		else RxHPF = 0x40;			// 6M BPF + LNA
-	    }
-
-	    TxLPF = AlexTxLPF;
-	    if (AlexTxLPF == 0)				// if Tx autotrack
-	    {
-		if (TransmitFrequency > 30000000)
-		  TxLPF = 0x10;				// 6m LPF
-		else if (TransmitFrequency > 19000000)
-		  TxLPF = 0x20;				// 10/12m LPF
-		else if (TransmitFrequency > 14900000)
-		  TxLPF = 0x40;				// 15/17m LPF
-		else if (TransmitFrequency > 9900000)
-		  TxLPF = 0x01;				// 30/20m LPF
-		else if (TransmitFrequency > 4900000)
-		  TxLPF = 0x02;				// 60/40m LPF
-		else if (TransmitFrequency > 3400000)
-		  TxLPF = 0x04;				// 80m LPF
-		else TxLPF = 0x08;			// 160m LPF
-	    }
-
-	    outbuf[5] = 0x40;				// c2 - Alex Manual filter control enabled
-	    outbuf[6] = RxHPF & 0x7f;			// c3 - Alex HPF filter selection
-	    outbuf[7] = TxLPF & 0x7f;			// c4 - Alex LPF filter selection
+	    // TODO HL2 VNA mode
+	    outbuf[6] = 0;
+	    outbuf[7] = 0;
 	  break;
 
-	  case 20:					// Hermes input attenuator setting
-	    outbuf[4] = 0;				//
-	    outbuf[5] = 0x17;				// Not implemented yet, should not be called by
-	    outbuf[6] = 0;				// TxControlCycler yet.
-	    outbuf[7] = RxAtten;			// 0..31 db attenuator setting (same function as preamp)
+	  case 20:
+	    // TODO Puresignal
+	    outbuf[4] = 0;
+	    outbuf[5] = 0;
+	    outbuf[6] = 0;
+	    outbuf[7] = (51 - LNAGain) & 0x1f;
 	  break;
 	
 	  case 22:
-	    outbuf[4] = 0;				// Register not documented, but zeroed by
-	    outbuf[5] = 0;				// PowerSDR...
-	    outbuf[6] = 0;				//
-	    outbuf[7] = 0;				//
+	    outbuf[4] = 0;
+	    outbuf[5] = 0;
+	    outbuf[6] = 0;
+	    outbuf[7] = 0;
 	  break;					
 
 	  default:

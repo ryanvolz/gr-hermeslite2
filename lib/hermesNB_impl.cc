@@ -40,37 +40,33 @@ namespace gr {
   namespace hermeslite2 {
 
     hermesNB::sptr
-    hermesNB::make(int RxFreq0, int RxFreq1, int TxFreq, bool RxPre,
-			 int PTTModeSel, bool PTTTxMute, bool PTTRxMute,
-			 unsigned char TxDr, int RxSmp, const char* Intfc, 
-			 const char * ClkS, int AlexRA, int AlexTA,
-			 int AlexHPF, int AlexLPF, int Verbose, int NumRx,
-		         const char* MACAddr, int RxAtt, bool Dither, bool Random)
+    hermesNB::make(int RxFreq0, int RxFreq1, int TxFreq,
+		   int PTTModeSel, bool PTTTxMute, bool PTTRxMute,
+		   unsigned char TxDr, int RxSmp, const char* Intfc, 
+		   int Verbose, int NumRx,
+		   const char* MACAddr, bool AGC, int LNAG, bool PA, bool Q5)
     {
       return gnuradio::get_initial_sptr
-        (new hermesNB_impl(RxFreq0, RxFreq1, TxFreq, RxPre, PTTModeSel, PTTTxMute,
-			PTTRxMute, TxDr, RxSmp, Intfc, ClkS, AlexRA, AlexTA,
-			AlexHPF, AlexLPF, Verbose, NumRx, MACAddr, RxAtt, Dither, Random));
+        (new hermesNB_impl(RxFreq0, RxFreq1, TxFreq, PTTModeSel, PTTTxMute,
+			   PTTRxMute, TxDr, RxSmp, Intfc,
+			   Verbose, NumRx, MACAddr, AGC, LNAG, PA, Q5));
     }
 
     /*
      * The private constructor
      */
-    hermesNB_impl::hermesNB_impl(int RxFreq0, int RxFreq1, int TxFreq, bool RxPre,
-			 int PTTModeSel, bool PTTTxMute, bool PTTRxMute,
-			 unsigned char TxDr, int RxSmp, const char* Intfc, 
-			 const char * ClkS, int AlexRA, int AlexTA,
-			 int AlexHPF, int AlexLPF, int Verbose, int NumRx,
-			 const char* MACAddr, int RxAtt, bool Dither, bool Random)
+    hermesNB_impl::hermesNB_impl(int RxFreq0, int RxFreq1, int TxFreq,
+		   int PTTModeSel, bool PTTTxMute, bool PTTRxMute,
+		   unsigned char TxDr, int RxSmp, const char* Intfc, 
+		   int Verbose, int NumRx,
+		   const char* MACAddr, bool AGC, int LNAG, bool PA, bool Q5)
       : gr::block("hermesNB",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),		// inputs to hermesNB block
               gr::io_signature::make(1, 2, sizeof(gr_complex)) )	// outputs from hermesNB block
     {
-	Hermes = new HermesProxy(RxFreq0, RxFreq1, TxFreq, RxPre, PTTModeSel, PTTTxMute,
-		 PTTRxMute, TxDr, RxSmp, Intfc, ClkS, AlexRA, AlexTA,
-		 AlexHPF, AlexLPF, Verbose, NumRx, MACAddr, RxAtt, Dither, Random);	// Create proxy, do Hermes ethernet discovery
-	//Hermes->RxSampleRate = RxSmp;
-	//Hermes->RxPreamp = RxPre;
+	Hermes = new HermesProxy(RxFreq0, RxFreq1, TxFreq, PTTModeSel, PTTTxMute,
+			   PTTRxMute, TxDr, RxSmp, Intfc,
+			   Verbose, NumRx, MACAddr, AGC, LNAG, PA, Q5);	// Create proxy, do Hermes ethernet discovery
 
 	gr::block::set_output_multiple(256);		// process outputs in groups of at least 256 samples
 	//gr::block::set_relative_rate((double) NumRx);	// FIXME - need to also account for Rx sample rate
@@ -124,11 +120,6 @@ void hermesNB::set_RxSampRate(int RxSmp)	// callback to set RxSampleRate
 	Hermes->RxSampleRate = RxSmp;
     }
 
-void hermesNB::set_RxPreamp(int RxPre)	// callback to set RxPreamp on or off
-    {
-	Hermes->RxPreamp = (bool)RxPre;
-    }
-
 void hermesNB::set_PTTMode(int PTTmode)	// callback to set PTTMode (Off, Vox, On)
     {
 	Hermes->PTTMode = PTTmode;
@@ -149,40 +140,30 @@ void hermesNB::set_TxDrive(int TxD)	// callback to set Transmit Drive Level (0..
 	Hermes->TxDrive = (unsigned char)TxD;
     }
 
-void hermesNB::set_ClockSource(const char * ClkS)	// callback to set Clock source
-    {
-	unsigned int ck;
-	sscanf(ClkS, "%x", &ck);   	// convert char string to 8 bits
-	ck &= 0xFC;			// mask lower bits
-	Hermes->ClockSource = ck;
-    }
-
-void hermesNB::set_AlexRxAntenna(int RxA)		// callback to set Alex Rx Antenna Selector
-{
-	Hermes->AlexRxAnt = RxA;
-}
-
-void hermesNB::set_AlexTxAntenna(int TxA)		// callback to set Alex Tx Antenna Selector
-{
-	Hermes->AlexTxAnt = TxA;
-}
-
-void hermesNB::set_AlexRxHPF(int HPF)		// callback to select Alex Rx High Pass Filter
-{
-	Hermes->AlexRxHPF = HPF;
-}
-
-void hermesNB::set_AlexTxLPF(int LPF)		// callback to set Alex Tx Low Pass filter
-{
-	Hermes->AlexTxLPF = LPF;
-}
-
 void hermesNB::set_Verbose(int Verb)		// callback to turn Verbose mode on or off
 {
 	Hermes->Verbose = Verb;
 }
 
+void hermesNB::set_HardwareAGC(bool AGC)
+{
+        Hermes->HardwareAGC = AGC;
+}
 
+void hermesNB::set_LNAGain(int LNAG)
+{
+        Hermes->LNAGain = LNAG;
+}
+
+void hermesNB::set_OnboardPA(bool PA)
+{
+        Hermes->OnboardPA = PA;
+}
+
+void hermesNB::set_Q5Switch(bool Q5)
+{
+        Hermes->Q5Switch = Q5;
+}
 
 void hermesNB_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {

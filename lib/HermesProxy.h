@@ -99,22 +99,15 @@ public:
 	int RxSampleRate;
 
 	unsigned char TxDrive;
-	unsigned char RxAtten;		// not yet used (requires Hermes firmware V2.0)
-
-	unsigned int ClockSource;	// upper 6-bits of clock control register
-
-	unsigned char AlexRxAnt;	// Select Alex Receive Antenna or from T/R relay
-	unsigned char AlexTxAnt;	// Select Alex Tx Antenna
-	unsigned char AlexRxHPF;	// Select Alex Receive High Pass Filter
-	unsigned char AlexTxLPF;	// Select Alex Transmit Low Pass Filter
 
 	int PTTMode;
-	bool RxPreamp;
-	bool ADCdither;
-	bool ADCrandom;
 	bool ADCoverload;
 	bool Duplex;
-
+        bool HardwareAGC;               // HL2 Hardware AGC
+        int LNAGain;                    // HL2 LNA Gain
+        bool OnboardPA;                 // HL2 Onboard PA
+        bool Q5Switch;                  // HL2 Q5 switch external PTT in low power mode
+        
 	unsigned char HermesVersion;
 	unsigned int AIN1, AIN2, AIN3, AIN4, AIN5, AIN6;  // Analog inputs to Hermes
 	unsigned int AlexRevPwr;
@@ -131,12 +124,11 @@ public:
 	unsigned int metis_entry;	// Index into Metis_card MAC table
 
 
-	HermesProxy(int RxFreq0, int RxFreq1, int TxFreq, bool RxPre,
+	HermesProxy(int RxFreq0, int RxFreq1, int TxFreq,
 			 int PTTModeSel, bool PTTTxMute, bool PTTRxMute,
 			 unsigned char TxDr, int RxSmp, const char* Intfc, 
-			 const char * ClkS, int AlexRA, int AlexTA,
-			 int AlexHPF, int AlexRPF, int Verbose, int NumRx,
-		         const char* MACAddr, int RXAtt, bool Dither, bool Random); // constructor
+		         int Verbose, int NumRx,
+		         const char* MACAddr, bool AGC, int LNAG, bool PA, bool Q5); // constructor
 
 	~HermesProxy();			// destructor
 

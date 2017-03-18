@@ -5,22 +5,20 @@
   <category>[Hermes Lite 2]</category>
   <flags>throttle</flags>
   <import>import hermeslite2</import>
-  <make>hermeslite2.hermesNB($Rx0F, $Rx1F, $TxF, $RxPre, $PTTmode, $PTTTx, $PTTRx, $TxDrive, $RxSmp, $Intfc, $CkS, $AlexRA, $AlexTA, $AlexHPF, $AlexLPF, $Verbose, $num_outputs,$MACAddr,$RXAtt,$Dither,$Random)</make>
+  <make>hermeslite2.hermesNB($Rx0F, $Rx1F, $TxF, $PTTmode, $PTTTx, $PTTRx, $TxDrive, $RxSmp, $Intfc, $Verbose, $num_outputs, $MACAddr, $AGC, $LNAG, $PA, $Q5)</make>
   <callback>set_Receive0Frequency($Rx0F)</callback>
   <callback>set_Receive1Frequency($Rx1F)</callback>
   <callback>set_RxSampRate($RxSmp)</callback>
-  <callback>set_RxPreamp($RxPre)</callback>
   <callback>set_PTTMode($PTTmode)</callback>
   <callback>set_PTTOffMutesTx($PTTTx)</callback>
   <callback>set_PTTOnMutesRx($PTTRx)</callback>
   <callback>set_TxDrive($TxDrive)</callback>
   <callback>set_TransmitFrequency($TxF)</callback>
-  <callback>set_ClockSource($CkS)</callback>
-  <callback>set_AlexRxAntenna($AlexRA)</callback>
-  <callback>set_AlexTxAntenna($AlexTA)</callback>
-  <callback>set_AlexRxHPF($AlexHPF)</callback>
-  <callback>set_AlexTxLPF($AlexLPF)</callback>
   <callback>set_Verbose($Verbose)</callback>
+  <callback>set_HardwareAGC($AGC)</callback>
+  <callback>set_LNAGain($LNAG)</callback>
+  <callback>set_OnboardPA($PA)</callback>
+  <callback>set_Q5Switch($Q5)</callback>
  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name
@@ -67,12 +65,6 @@
     </option>
   </param>
   <param>
-    <name>Rx Preamp Off/On</name>
-    <key>RxPre</key>
-    <value>False</value>
-    <type>bool</type>
-  </param>
-  <param>
     <name>PTT On Mutes Rx</name>
     <key>PTTRx</key>
     <value>True</value>
@@ -109,128 +101,6 @@
     <type>raw</type>
   </param>
   <param>
-    <name>HPSDR Clock Source</name>
-    <key>CkS</key>
-    <value>"0xF8"</value>
-    <type>raw</type>
-  </param>
-  <param>
-    <name>Alex Tx Antenna</name>
-    <key>AlexTA</key>
-    <value>0</value>
-    <type>enum</type>
-    <option>
-      <name>Tx1</name>
-      <key>0</key>
-    </option>
-    <option>
-      <name>Tx2</name>
-      <key>1</key>
-    </option>
-    <option>
-      <name>Tx3</name>
-      <key>2</key>
-    </option>
-  </param>
-  <param>
-    <name>Alex Rx Antenna</name>
-    <key>AlexRA</key>
-    <value>0</value>
-    <type>enum</type>
-    <option>
-      <name>Tx Ant via T/R Relay</name>
-      <key>0</key>
-    </option>
-    <option>
-      <name>Rx1</name>
-      <key>0xa0</key>
-    </option>
-    <option>
-      <name>Rx2</name>
-      <key>0xc0</key>
-    </option>
-    <option>
-      <name>RxXvrtr</name>
-      <key>0xe0</key>
-    </option>
-  </param>
-  <param>
-    <name>Alex Rx HPF</name>
-    <key>AlexHPF</key>
-    <value>0x00</value>
-    <type>enum</type>
-   <option>
-      <name>AutoTrack Rx0Freq</name>
-      <key>0x00</key>
-    </option>
-     <option>
-      <name>Bypass</name>
-      <key>0x20</key>
-    </option>
-    <option>
-      <name>1.5 MHz HPF</name>
-      <key>0x10</key>
-    </option>
-    <option>
-      <name>6.5 MHz HPF</name>
-      <key>0x08</key>
-    </option>
-    <option>
-      <name>9.5 MHz HPF</name>
-      <key>0x04</key>
-    </option>
-    <option>
-      <name>13 MHz HPF</name>
-      <key>0x01</key>
-    </option>
-    <option>
-      <name>20 MHz HPF</name>
-      <key>0x02</key>
-    </option>
-    <option>
-      <name>6M LNA+LPF</name>
-      <key>0x40</key>
-    </option>
-  </param>
-  <param>
-    <name>Alex Tx LPF</name>
-    <key>AlexLPF</key>
-    <value>0x00</value>
-    <type>enum</type>
-    <option>
-      <name>AutoTrack TxFreq</name>
-      <key>0x00</key>
-    </option>
-    <option>
-      <name>160m LPF</name>
-      <key>0x08</key>
-    </option>
-    <option>
-      <name>80m LPF</name>
-      <key>0x04</key>
-    </option>
-    <option>
-      <name>60/40m LPF</name>
-      <key>0x02</key>
-    </option>
-    <option>
-      <name>30/20m LPF</name>
-      <key>0x01</key>
-    </option>
-    <option>
-      <name>17/15m LPF</name>
-      <key>0x40</key>
-    </option>
-    <option>
-      <name>12/10m LPF</name>
-      <key>0x20</key>
-    </option>
-    <option>
-      <name>6m LPF</name>
-      <key>0x10</key>
-    </option>
-  </param>
-  <param>
     <name>Verbose (1=on, 0=off)</name>
     <key>Verbose</key>
     <value>0</value>
@@ -250,21 +120,27 @@
     <value>"*"</value>
     <type>string</type>
   </param>
-   <param>
-    <name>RX Attenuation</name>
-    <key>RXAtt</key>
-    <value>0</value>
-    <type>int</type>
-   </param>
   <param>
-    <name>Dither</name>
-    <key>Dither</key>
-    <value>True</value>
+    <name>Hardware AGC</name>
+    <key>AGC</key>
+    <value>False</value>
     <type>bool</type>
   </param>
   <param>
-    <name>Random</name>
-    <key>Random</key>
+    <name>LNA Gain</name>
+    <key>LNAG</key>
+    <value>18</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Enable PA</name>
+    <key>PA</key>
+    <value>False</value>
+    <type>bool</type>
+  </param>
+  <param>
+    <name>Q5 switch external PTT in low power mode</name>
+    <key>Q5</key>
     <value>False</value>
     <type>bool</type>
   </param>
@@ -308,16 +184,6 @@
   Rcvr0 corresponds to out0, Rcvr1 corresponds to out1.
   *Interface = the ethernet interface to use.
     Example: "eth0" {including quote marks}.
-  *Clock Source = HPSDR Clock Selector - 1 byte-> assigned to one register.
-  byte->C1 when C0 = 0. Allows selection of clock and mic sources. Only upper
-  6 bits are used (lower 2 bits are overwritten by receive sample speed
-  selection. Hermes ignores this register. Default value selects Mercury.
-    Example: "0xfc" {including quote marks}
-  *Alex Tx Ant = selects transmit antenna (Tx1, Tx2, or Tx3).
-  *Alex Rx ant = selects receive antenna connector, or Tx antenna via T/R relay.
-  *Alex Tx LPF = selects transmit Low Pass Filter. Auto tracks the Transmit Frequency.
-  *Alex Rx HPF = selects receive High Pass filter. Auto tracks Receiver 0 Frequency.
-  *Verbose = if =1 then prints Hermes/Metis FPGA rev, Fwd and Rev log voltage from Alex
   *MACAddr = "HH:HH:HH:HH:HH:HH" with HH being the MAC Address hex values, or "*" to
     select the first detected Metis/Hermes regardless of it's MAC Address.
     MACAddr is a string (and must be enclosed in quotes).
