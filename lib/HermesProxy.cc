@@ -780,8 +780,6 @@ void HermesProxy::BuildControlRegs(unsigned RegNum, RawBuf_t outbuf)
 	    // HL2 Hardware AGC
 	    if(HardwareAGC)
 	        RxCtrl |= 0x10;
-	    // HL2 LNA gain MSB
-	    RxCtrl |= ((51 - LNAGain) & 0x20) >> 2; // position 0x08
 	    // TODO HL2 VNA fixed gain
 
 	    Ctrl4 = 0x0;
@@ -850,7 +848,7 @@ void HermesProxy::BuildControlRegs(unsigned RegNum, RawBuf_t outbuf)
 	    outbuf[4] = 0;
 	    outbuf[5] = 0;
 	    outbuf[6] = 0;
-	    outbuf[7] = (51 - LNAGain) & 0x1f;
+	    outbuf[7] = ((LNAGain + 12) & 0x3f) | 0x40; // new gain protocol for HL2
 	  break;
 	
 	  case 22:
