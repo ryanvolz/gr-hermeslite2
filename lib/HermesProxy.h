@@ -52,6 +52,8 @@
 #define TXINITIALBURST	  4		// Number of Ethernet frames to holdoff before bursting
 					// to fill hardware TXFIFO
 
+#define MAXRECEIVERS      8		// Maximum number of receivers defined by protocol specification
+
 typedef float* IQBuf_t;			// IQ buffer type (IQ samples as floats)
 typedef unsigned char* RawBuf_t;	// Raw transmit buffer type
 
@@ -94,6 +96,12 @@ public:
 
 	unsigned Receive0Frequency;	// 1st rcvr. Corresponds to out0 in gnuradio
 	unsigned Receive1Frequency;	// 2nd rcvr. Corresponds to out1 in gnuradio
+  	unsigned Receive2Frequency;	// 3rd rcvr. Corresponds to out2 in gnuradio
+  	unsigned Receive3Frequency;	// 4th rcvr. Corresponds to out3 in gnuradio
+  	unsigned Receive4Frequency;	// 5th rcvr. Corresponds to out4 in gnuradio
+  	unsigned Receive5Frequency;	// 6th rcvr. Corresponds to out5 in gnuradio
+  	unsigned Receive6Frequency;	// 7th rcvr. Corresponds to out6 in gnuradio
+  	unsigned Receive7Frequency;	// 8th rcvr. Corresponds to out7 in gnuradio
 	unsigned TransmitFrequency;
 	int NumReceivers;
 	int RxSampleRate;
@@ -124,7 +132,8 @@ public:
 	unsigned int metis_entry;	// Index into Metis_card MAC table
 
 
-	HermesProxy(int RxFreq0, int RxFreq1, int TxFreq,
+        HermesProxy(int RxFreq0, int RxFreq1, int RxFreq2, int RxFreq3, int RxFreq4,
+		    int RxFreq5, int RxFreq6, int RxFreq7, int TxFreq,
 			 int PTTModeSel, bool PTTTxMute, bool PTTRxMute,
 			 unsigned char TxDr, int RxSmp, const char* Intfc, 
 		         int Verbose, int NumRx,
@@ -144,11 +153,10 @@ public:
 	void UpdateHermes();		// update control registers in Hermes without any Tx data
 
 	void ReceiveRxIQ(unsigned char *); // receive an IQ buffer from Hermes hardware via metis.cc thread
-	IQBuf_t GetRxIQ();		// Gnuradio pickup a received RxIQ buffer if available
-	IQBuf_t GetNextRxBuf(IQBuf_t);  // return existing out buffer, next output buffer (if needed),
-					// or NULL if no new one available
-	void Unpack1RxIQ(const unsigned char*, const IQBuf_t);	// unpack a received IQ sample 1 receiver case
-	void Unpack2RxIQ(const unsigned char*, const IQBuf_t);	// unpack a received IQ sample 2 receiver case
+	IQBuf_t GetRxIQ();		// Gnuradio pickup a received RxIQ buffer if available (next readable Rx buffer)
+	IQBuf_t GetNextRxBuf();  // get an empty output buffer, NULL if no new one available (next writable Rx buffer)
+        float Unpack2C(const unsigned char* inptr);  // unpack 2's complement to float
+	unsigned int USBRowCount[MAXRECEIVERS];
 
 	void PrintRawBuf(RawBuf_t);	// for debugging
 

@@ -5,9 +5,10 @@
   <category>[Hermes Lite 2]</category>
   <flags>throttle</flags>
   <import>import hermeslite2</import>
-  <make>hermeslite2.hermesNB($Rx0F, $Rx1F, $TxF, $PTTmode, $PTTTx, $PTTRx, $TxDrive, $RxSmp, $Intfc, $Verbose, $num_outputs, $MACAddr, $AGC, $LNAG, $PA, $Q5)</make>
+  <make>hermeslite2.hermesNB($Rx0F, $Rx1F, $Rx2F, $Rx3F, $Rx4F, $Rx5F, $Rx6F, $Rx7F, $TxF, $PTTmode, $PTTTx, $PTTRx, $TxDrive, $RxSmp, $Intfc, $Verbose, $num_outputs, $MACAddr, $AGC, $LNAG, $PA, $Q5)</make>
   <callback>set_Receive0Frequency($Rx0F)</callback>
   <callback>set_Receive1Frequency($Rx1F)</callback>
+  <callback>set_Receive1Frequency($Rx2F)</callback>
   <callback>set_RxSampRate($RxSmp)</callback>
   <callback>set_PTTMode($PTTmode)</callback>
   <callback>set_PTTOffMutesTx($PTTTx)</callback>
@@ -33,6 +34,42 @@
   <param>
     <name>Rcvr 1 Frequency, Hz.</name>
     <key>Rx1F</key>
+    <value>7200000</value>
+    <type>real</type>
+  </param>
+  <param>
+    <name>Rcvr 2 Frequency, Hz.</name>
+    <key>Rx2F</key>
+    <value>7200000</value>
+    <type>real</type>
+  </param>
+  <param>
+    <name>Rcvr 3 Frequency, Hz.</name>
+    <key>Rx3F</key>
+    <value>7200000</value>
+    <type>real</type>
+  </param>
+  <param>
+    <name>Rcvr 4 Frequency, Hz.</name>
+    <key>Rx4F</key>
+    <value>7200000</value>
+    <type>real</type>
+  </param>
+  <param>
+    <name>Rcvr 5 Frequency, Hz.</name>
+    <key>Rx5F</key>
+    <value>7200000</value>
+    <type>real</type>
+  </param>
+  <param>
+    <name>Rcvr 6 Frequency, Hz.</name>
+    <key>Rx6F</key>
+    <value>7200000</value>
+    <type>real</type>
+  </param>
+  <param>
+    <name>Rcvr 7 Frequency, Hz.</name>
+    <key>Rx7F</key>
     <value>7200000</value>
     <type>real</type>
   </param>
@@ -89,7 +126,7 @@
     <type>int</type>
   </param>
   <param>
-    <name>Num Rcvrs (1 or 2)</name>
+    <name>Num Rcvrs (1 to 8)</name>
     <key>num_outputs</key>
     <value>1</value>
     <type>int</type>
@@ -148,7 +185,7 @@
 
 
 <check>$num_outputs >= 1</check> 
-<check>2 >= $num_outputs</check>   
+<check>8 >= $num_outputs</check>   
 
   <!-- Make one 'sink' node per input. Sub-nodes:
        * name (an identifier for the GUI)
@@ -188,5 +225,6 @@
     select the first detected Metis/Hermes regardless of it's MAC Address.
     MACAddr is a string (and must be enclosed in quotes).
   Update: 03-13-2014: Reverse transmit I and Q samples (FPGA reverses them).
+  Update: July 2017 - increase receivers supported to 8.
   </doc>
 </block>

@@ -36,6 +36,12 @@ namespace gr {
 /*! \brief Construct a HermesNB module
  * \param RxFreq0    Receiver 0 frequency, Hz.
  * \param RxFreq1    Receiver 1 frequency, Hz.
+ * \param RxFreq2    Receiver 2 frequency, Hz.
+ * \param RxFreq3    Receiver 3 frequency, Hz.
+ * \param RxFreq4    Receiver 4 frequency, Hz.
+ * \param RxFreq5    Receiver 5 frequency, Hz.
+ * \param RxFreq6    Receiver 6 frequency, Hz.
+ * \param RxFreq7    Receiver 7 frequency, Hz.
  * \param TxFreq     Transmitter frequency, Hz.
  * \param PTTModeSel PTT mode selector off (0), VOX (1), on (2)
  * \param PTTTxMute  Mute Tx on PTT
@@ -52,7 +58,9 @@ namespace gr {
  * \param Q5 HL2 enable Q5 switch external PTT in low power mode
  *
  */
-      hermesNB_impl(int RxFreq0, int RxFreq1, int TxFreq,
+      hermesNB_impl(int RxFreq0, int RxFreq1, int RxFreq2, int RxFreq3,
+		    int RxFreq4, int RxFreq5, int RxFreq6, int RxFreq7,
+		    int TxFreq,
 		   int PTTModeSel, bool PTTTxMute, bool PTTRxMute,
 		   unsigned char TxDr, int RxSmp, const char* Intfc, 
 		   int Verbose, int NumRx,
