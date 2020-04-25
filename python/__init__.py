@@ -19,37 +19,12 @@
 # The presence of this file turns this directory into a Python package
 
 '''
-This is the GNU Radio Hermes Lite 2 module. Place your Python package
-description here (python/__init__.py).
+Hermes Lite 2 GNU Radio blocks
 '''
-
-# ----------------------------------------------------------------
-# Temporary workaround for ticket:181 (swig+python problem)
-import sys
-_RTLD_GLOBAL = 0
-try:
-    from dl import RTLD_GLOBAL as _RTLD_GLOBAL
-except ImportError:
-    try:
-	from DLFCN import RTLD_GLOBAL as _RTLD_GLOBAL
-    except ImportError:
-	pass
-
-if _RTLD_GLOBAL != 0:
-    _dlopenflags = sys.getdlopenflags()
-    sys.setdlopenflags(_dlopenflags|_RTLD_GLOBAL)
-# ----------------------------------------------------------------
-
+from __future__ import unicode_literals
 
 # import swig generated symbols into the hermeslite2 namespace
-from hermeslite2_swig import *
+from .hermeslite2_swig import *
 
 # import any pure python here
-
 #
-
-# ----------------------------------------------------------------
-# Tail of workaround
-if _RTLD_GLOBAL != 0:
-    sys.setdlopenflags(_dlopenflags)      # Restore original flags
-# ----------------------------------------------------------------

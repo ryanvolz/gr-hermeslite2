@@ -1,6 +1,6 @@
 /*!
- * \defgroup block GNU Radio HPSDR C++ Signal Processing Blocks
- * \brief All C++ blocks that can be used from the HPSDR GNU Radio
+ * \defgroup block GNU Radio HERMESLITE2 C++ Signal Processing Blocks
+ * \brief All C++ blocks that can be used from the HERMESLITE2 GNU Radio
  *        module are listed here or in the subcategories below.
  *
  */
