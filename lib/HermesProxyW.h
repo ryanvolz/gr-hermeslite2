@@ -29,13 +29,13 @@
 #ifndef HermesProxyW_H
 #define HermesProxyW_H
 
-#define NUMRXIQBUFS	128		// number of receiver IQ buffers in circular queue.
+#define NUMRXIQBUFS	512		// number of receiver IQ buffers in circular queue.
 					// Must be integral power of 2 (2,4,8,16,32,64, etc.)
 
 #define RXBUFSIZE	256		// number of floats in one RxIQBuf, #complexes is half
 					// Must be integral power of 2 (2,4,8,16,32,64, etc.)
 
-#define NUMTXBUFS	128		// number of transmit buffers in circular queue
+#define NUMTXBUFS	512		// number of transmit buffers in circular queue
 					// Must be integral power of 2
 
 #define TXBUFSIZE	512		// number of bytes in one TxBuf
