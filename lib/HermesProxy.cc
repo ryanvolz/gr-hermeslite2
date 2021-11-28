@@ -204,6 +204,7 @@ HermesProxy::HermesProxy(int RxFreq0, int RxFreq1, int RxFreq2, int RxFreq3,
 	CorruptRxCount = 0;	//
 	LostEthernetRx = 0;	//
 	CurrentEthSeqNum = 0;	//
+	FirstEthSeq = true;
 
 	
 	TxHoldOff = 0;		// initialize transmit hold off counter
@@ -327,23 +328,39 @@ void HermesProxy::ReceiveRxIQ(unsigned char * inbuf)	// called by metis Rx threa
 	// sequence number.
 
         //PrintRawBuf(inbuf);	// include Ethernet header
-  
+
+        const unsigned int sequence_num_bits = 20;
 	unsigned int SequenceNum = (unsigned char)(inbuf[4]) << 24;
 	SequenceNum += (unsigned char)(inbuf[5]) << 16;
 	SequenceNum += (unsigned char)(inbuf[6]) << 8;
 	SequenceNum += (unsigned char)(inbuf[7]);
 
-	if(SequenceNum > CurrentEthSeqNum + 1)
-	{
-	    LostEthernetRx += (SequenceNum - CurrentEthSeqNum);
-	    CurrentEthSeqNum = SequenceNum;
+	if (FirstEthSeq) {
+	    // This is the first packet we see. We do not check the sequence number.
+	    FirstEthSeq = false;
 	}
-	else
+	else if (SequenceNum != (CurrentEthSeqNum + 1) % (1 << sequence_num_bits))
 	{
-	  if(SequenceNum == CurrentEthSeqNum + 1)
-	    CurrentEthSeqNum++;
+	    // SequenceNum is not as we expected. There are some lost frames.
+	    // Insert zeros to avoid a gap in the sample stream.
+	    int lost = SequenceNum - CurrentEthSeqNum - 1;
+	    if (lost < 0) lost += 1 << sequence_num_bits;
+	    fprintf(stderr, "ReceiveRxIQ: Lost %u frames\n", lost);
+	    // Fake two USB frames per lost frame
+	    for (int j=0; j < 2 * lost; j++) {
+		auto outbuf = GetNextRxBuf();
+		if (outbuf == NULL) {
+		    fprintf(stderr, "ReceiveRxIQ: All output buffers are full. Cannot recover from gap\n");
+		    return;
+		}
+		memset(outbuf, 0, RXBUFSIZE * sizeof(float));
+		sem_post(&rx_sem);
+	    }
+
+	    LostEthernetRx += lost;
 	}
-	
+
+	CurrentEthSeqNum = SequenceNum;
 
 	// Metis Rx thread gives us collection of samples including the Ethernet header
 	// plus 2 x HPSDR USB frames.
@@ -546,8 +563,10 @@ void HermesProxy::ReceiveRxIQ(unsigned char * inbuf)	// called by metis Rx threa
 	{
 	    inbufindex = inbuf + USBFrameOffset;  // inbuf already pointing past Ethernet frame header
 
-	    if ((outbuf = GetNextRxBuf()) == NULL)
+	    if ((outbuf = GetNextRxBuf()) == NULL) {
+		fprintf(stderr, "ReceiveRxIQ: All buffers full. Throwing away data\n");
 	        return;				// all buffers full. Throw away data
+	    }
 
 	    outindex = 0;
 
@@ -563,6 +582,7 @@ void HermesProxy::ReceiveRxIQ(unsigned char * inbuf)	// called by metis Rx threa
 	        };
 	        inbufindex +=2;			// skip microphone samples in the row
 	    };
+	    sem_post(&rx_sem);
 	};
 
 	return; // normal return;
@@ -609,7 +629,6 @@ IQBuf_t HermesProxy::GetNextRxBuf() // get next Writeable Rx buffer
   else
   {
     ++RxWriteCounter &= (NUMRXIQBUFS - 1); // get next writeable buffer
-    sem_post(&rx_sem);
     return RxIQBuf[RxWriteCounter];
   }
 };

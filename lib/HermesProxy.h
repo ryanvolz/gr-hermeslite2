@@ -85,6 +85,7 @@ private:
 	unsigned long CorruptRxCount;	//
 	unsigned long LostEthernetRx;	//
 	unsigned long CurrentEthSeqNum;	// Diagnostic
+        bool FirstEthSeq;
 
 	//pthread_mutex_t mutexRPG;	// Rx to Proxy to Gnuradio buffer
 	//pthread_mutex_t mutexGPT;	// Gnuradio to Proxy to Tx buffer
