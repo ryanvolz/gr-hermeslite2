@@ -1,6 +1,7 @@
 options:
   parameters:
     author: "Daniel Est\xE9vez"
+    catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
@@ -38,8 +39,8 @@ blocks:
     comment: ''
     gui_hint: ''
     label: Frequency (Hz)
-    type: real
-    value: 7e6
+    type: int
+    value: '7000000'
   states:
     bus_sink: false
     bus_source: false
@@ -87,7 +88,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [65, 253]
+    coordinate: [64, 248.0]
     rotation: 0
     state: true
 - name: hermeslite2_NB_0
@@ -124,7 +125,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [269, 144]
+    coordinate: [272, 140.0]
     rotation: 0
     state: true
 - name: qtgui_freq_sink_x_0
@@ -179,6 +180,7 @@ blocks:
     minoutbuf: '0'
     name: '""'
     nconnections: '1'
+    norm_window: 'False'
     showports: 'False'
     tr_chan: '0'
     tr_level: '0.0'
@@ -197,14 +199,14 @@ blocks:
     width7: '1'
     width8: '1'
     width9: '1'
-    wintype: firdes.WIN_BLACKMAN_hARRIS
+    wintype: window.WIN_BLACKMAN_hARRIS
     ymax: '10'
     ymin: '-140'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [761, 253]
+    coordinate: [760, 228.0]
     rotation: 0
     state: true
 
@@ -214,3 +216,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: 3.10.4.0

@@ -56,7 +56,7 @@ outputs:
     vlen: 16384
 
 templates:
-    imports: import hermeslite2
+    imports: from gnuradio import hermeslite2
     make: hermeslite2.hermesWB(${RxPre}, ${Intfc}, ${CkS}, ${AlexRA}, ${AlexTA}, ${AlexHPF},
         ${AlexLPF}, ${MACAddr})
     callbacks:

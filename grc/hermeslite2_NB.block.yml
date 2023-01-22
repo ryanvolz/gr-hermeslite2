@@ -9,46 +9,46 @@ flags:
 parameters:
 -   id: Rx0F
     label: Rcvr 0 Frequency, Hz.
-    dtype: real
+    dtype: int
     default: '7200000'
 -   id: Rx1F
     label: Rcvr 1 Frequency, Hz.
-    dtype: real
+    dtype: int
     default: '7200000'
     hide: ${ 'all' if num_outputs < 2 else 'none' }    
 -   id: Rx2F
     label: Rcvr 2 Frequency, Hz.
-    dtype: real
+    dtype: int
     default: '7200000'
     hide: ${ 'all' if num_outputs < 3 else 'none' }
 -   id: Rx3F
     label: Rcvr 3 Frequency, Hz.
-    dtype: real
+    dtype: int
     default: '7200000'
     hide: ${ 'all' if num_outputs < 4 else 'none' }
 -   id: Rx4F
     label: Rcvr 4 Frequency, Hz.
-    dtype: real
+    dtype: int
     default: '7200000'
     hide: ${ 'all' if num_outputs < 5 else 'none' }
 -   id: Rx5F
     label: Rcvr 5 Frequency, Hz.
-    dtype: real
+    dtype: int
     default: '7200000'
     hide: ${ 'all' if num_outputs < 6 else 'none' }
 -   id: Rx6F
     label: Rcvr 6 Frequency, Hz.
-    dtype: real
+    dtype: int
     default: '7200000'
     hide: ${ 'all' if num_outputs < 7 else 'none' }
 -   id: Rx7F
     label: Rcvr 7 Frequency, Hz.
-    dtype: real
+    dtype: int
     default: '7200000'
     hide: ${ 'all' if num_outputs < 8 else 'none' }
 -   id: TxF
     label: Transmit Frequency, Hz.
-    dtype: real
+    dtype: int
     default: '7200000'
 -   id: RxSmp
     label: Rx Sample Rate
@@ -120,7 +120,7 @@ asserts:
 - ${ 8 >= num_outputs }
 
 templates:
-    imports: import hermeslite2
+    imports: from gnuradio import hermeslite2
     make: hermeslite2.hermesNB(${Rx0F}, ${Rx1F}, ${Rx2F}, ${Rx3F}, ${Rx4F}, ${Rx5F},
         ${Rx6F}, ${Rx7F}, ${TxF}, ${PTTmode}, ${PTTTx}, ${PTTRx}, ${TxDrive}, ${RxSmp},
         ${Intfc}, ${Verbose}, ${num_outputs}, ${MACAddr}, ${AGC}, ${LNAG}, ${PA},
